@@ -3,32 +3,43 @@
 
 Servo myservo;
 
+// #define DEBUG 0
+#define PIN_SERVO_SIGNAL 11
+#define PIN_MIC_DO 12
+#define PIN_MIC_POWER 13
+
+#define RELEASE 83
+#define PRESS 70
+
 void setup()
 {
-    pinMode(13, OUTPUT);
-    pinMode(8, INPUT);
-    digitalWrite(13, HIGH);
-    myservo.attach(11); // 設定要將伺服馬達接到哪一個PIN腳
-    myservo.write(170);
+    pinMode(PIN_MIC_POWER, OUTPUT);
+    pinMode(PIN_MIC_DO, INPUT);
+    digitalWrite(PIN_MIC_POWER, HIGH);
+    myservo.attach(PIN_SERVO_SIGNAL);
+    myservo.write(RELEASE);
     delay(1000);
 
+#ifdef DEBUG
     Serial.begin(9600);
+#endif
 }
 
 void loop()
 {
-    int sensorValue = analogRead(A0); // 讀取A0的值
-    Serial.println(sensorValue);
-    Serial.println(digitalRead(8));
+#ifdef DEBUG
+    Serial.println(analogRead(A0));
+    Serial.println(digitalRead(PIN_MIC_DO));
+#endif
 
-    if (digitalRead(8) == 1)
+    if (digitalRead(PIN_MIC_DO) == 1)
     {
-        myservo.write(180);
-        delay(1000);
+        myservo.write(PRESS);
+        delay(100);
     }
     else
     {
-        myservo.write(170);
+        myservo.write(RELEASE);
     }
-    delay(10);
+    delay(100);
 }
